@@ -2,10 +2,34 @@
   <library name="Spigot 1.8 (v1_8_R3)">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.8 (v1_8_R3).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.9.2 (v1_9_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.9.4 (v1_9_R2).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.10 (v1_10_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.11 (v1_11_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.12 (v1_12_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.13 (v1_13_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.13.2 (v1_13_R2).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.14  (v1_14_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.15.2 (v_1_15_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.16 (v1_16_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.16.3 (v_1_16_R2).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.16.4 (v1_16_R3).jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.8 (v1_8_R3).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.9.2 (v1_9_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.9.4 (v1_9_R2).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.10 (v1_10_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.11 (v1_11_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.12 (v1_12_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.13 (v1_13_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.13.2 (v1_13_R2).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.14  (v1_14_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.15.2 (v_1_15_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.16 (v1_16_R1).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.16.3 (v_1_16_R2).jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../server ile ilgili/spigots/Spigot 1.16.4 (v1_16_R3).jar!/" />
     </SOURCES>
   </library>
 </component>
