@@ -52,9 +52,10 @@ public class HologramAPI {
     }
 
     public static void unsetup() {
+        Set<Map.Entry<String, Hologram>> set = new HashSet<>(Variables.holograms.entrySet());
         File file = new File("plugins/Holograms/data.yml");
         FileConfiguration data = YamlConfiguration.loadConfiguration(file);
-        for (Map.Entry<String, Hologram> entry : Variables.holograms.entrySet()) {
+        for (Map.Entry<String, Hologram> entry : set) {
 
             Hologram hologram = entry.getValue();
             hologram.delete();
