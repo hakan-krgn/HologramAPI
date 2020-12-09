@@ -2,7 +2,9 @@ package com.hakan.hologram.api;
 
 import com.hakan.hologram.Main;
 import com.hakan.hologram.hologram.Hologram;
+import com.hakan.hologram.hologram.nms.*;
 import com.hakan.hologram.utils.Variables;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 
@@ -62,7 +64,36 @@ public class HologramAPI {
         }
 
         public Hologram create() {
-            return new Hologram(this.id, this.lines, this.location);
+            String serverVersion = Bukkit.getServer().getClass().getName().split("\\.")[3];
+            switch (serverVersion) {
+                case "v1_8_R3":
+                    return new Hologram_v1_8_R3(this.id, this.lines, this.location);
+                case "v1_9_R1":
+                    return new Hologram_v1_9_R1(this.id, this.lines, this.location);
+                case "v1_9_R2":
+                    return new Hologram_v1_9_R2(this.id, this.lines, this.location);
+                case "v1_10_R1":
+                    return new Hologram_v1_10_R1(this.id, this.lines, this.location);
+                case "v1_11_R1":
+                    return new Hologram_v1_11_R1(this.id, this.lines, this.location);
+                case "v1_12_R1":
+                    return new Hologram_v1_12_R1(this.id, this.lines, this.location);
+                case "v1_13_R1":
+                    return new Hologram_v1_13_R1(this.id, this.lines, this.location);
+                case "v1_13_R2":
+                    return new Hologram_v1_13_R2(this.id, this.lines, this.location);
+                case "v1_14_R1":
+                    return new Hologram_v1_14_R1(this.id, this.lines, this.location);
+                case "v1_15_R1":
+                    return new Hologram_v1_15_R1(this.id, this.lines, this.location);
+                case "v1_16_R1":
+                    return new Hologram_v1_16_R1(this.id, this.lines, this.location);
+                case "v1_16_R2":
+                    return new Hologram_v1_16_R2(this.id, this.lines, this.location);
+                case "v1_16_R3":
+                    return new Hologram_v1_16_R3(this.id, this.lines, this.location);
+            }
+            return null;
         }
     }
 }
