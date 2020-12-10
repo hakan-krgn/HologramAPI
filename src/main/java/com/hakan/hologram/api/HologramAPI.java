@@ -1,8 +1,10 @@
 package com.hakan.hologram.api;
 
+import com.hakan.hologram.Main;
 import com.hakan.hologram.hologram.Hologram;
 import com.hakan.hologram.hologram.nms.*;
 import com.hakan.hologram.listeners.JoinListener;
+import com.hakan.hologram.listeners.TeleportListener;
 import com.hakan.hologram.utils.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,29 +32,33 @@ public class HologramAPI {
     }
 
     public static void setup(Plugin plugin) {
-        PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new JoinListener(), plugin);
+        if (Main.instance == null) {
+            Main.instance = plugin;
+            PluginManager pm = Bukkit.getPluginManager();
+            pm.registerEvents(new JoinListener(), plugin);
+            pm.registerEvents(new TeleportListener(), plugin);
 
-        File file = new File("plugins/Holograms/data.yml");
-        FileConfiguration data = YamlConfiguration.loadConfiguration(file);
-        for (String id : data.getConfigurationSection("").getKeys(false)) {
-            String[] locString = data.getString(id + ".location").split(",");
-            List<String> lines = data.getStringList(id + ".lines");
-            Location location = new Location(Bukkit.getWorld(locString[0]), Double.parseDouble(locString[1]), Double.parseDouble(locString[2]), Double.parseDouble(locString[3]));
+            File file = new File("plugins/Holograms/data.yml");
+            FileConfiguration data = YamlConfiguration.loadConfiguration(file);
+            for (String id : data.getConfigurationSection("").getKeys(false)) {
+                String[] locString = data.getString(id + ".location").split(",");
+                List<String> lines = data.getStringList(id + ".lines");
+                Location location = new Location(Bukkit.getWorld(locString[0]), Double.parseDouble(locString[1]), Double.parseDouble(locString[2]), Double.parseDouble(locString[3]));
 
-            HologramAPI.HologramManager hologramManager = HologramAPI.getHologramManager().setId(id).setLines(lines).setLocation(location);
-            Hologram hologram = hologramManager.create();
-            Set<UUID> uuids = new HashSet<>();
-            for (String uuidString : data.getStringList(id + ".players")) {
-                uuids.add(UUID.fromString(uuidString));
+                HologramAPI.HologramManager hologramManager = HologramAPI.getHologramManager().setId(id).setLines(lines).setLocation(location);
+                Hologram hologram = hologramManager.create();
+                Set<UUID> uuids = new HashSet<>();
+                for (String uuidString : data.getStringList(id + ".players")) {
+                    uuids.add(UUID.fromString(uuidString));
+                }
+                hologram.setPlayers(uuids);
+
+                Variables.holograms.put(id, hologram);
+
+                hologram.update();
             }
-            hologram.setPlayers(uuids);
-
-            Variables.holograms.put(id, hologram);
-
-            hologram.update();
+            file.delete();
         }
-        file.delete();
     }
 
     public static void unsetup() {
