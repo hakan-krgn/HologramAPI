@@ -161,7 +161,7 @@ public class Hologram_v1_15_R1 implements Hologram {
             entityArmorStand.setNoGravity(true);
             entityArmorStand.setInvisible(true);
             entityArmorStand.setCustomNameVisible(true);
-            entityArmorStand.setCustomName(IChatBaseComponent.ChatSerializer.a(line));
+            entityArmorStand.setCustomName(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + line + "\"}"));
             this.entityArmorStands.add(entityArmorStand);
             startY = startY - 0.245;
         }
