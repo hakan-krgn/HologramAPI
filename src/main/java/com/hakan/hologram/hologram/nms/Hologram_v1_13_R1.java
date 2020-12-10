@@ -37,8 +37,10 @@ public class Hologram_v1_13_R1 implements Hologram {
         if (this.entityArmorStands.size() > 0) {
             for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
                 PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
+                PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), false);
                 for (Player player : players) {
                     sendPacket(player, spawnPacket);
+                    sendPacket(player, metadataPacket);
                 }
             }
         }
@@ -53,11 +55,13 @@ public class Hologram_v1_13_R1 implements Hologram {
 
     @Override
     public void delete() {
-        for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
-            PacketPlayOutEntityDestroy deletePacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
-            for (UUID uuid : getPlayers()) {
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) sendPacket(player, deletePacket);
+        if (this.entityArmorStands.size() > 0) {
+            for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
+                PacketPlayOutEntityDestroy deletePacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
+                for (UUID uuid : getPlayers()) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player != null) sendPacket(player, deletePacket);
+                }
             }
         }
         this.entityArmorStands.clear();
