@@ -17,6 +17,10 @@ import java.util.*;
 
 public class HologramAPI {
 
+    public static List<Hologram> getHolograms() {
+        return new ArrayList<>(Variables.holograms.values());
+    }
+
     public static Hologram getHologram(String id) {
         return Variables.holograms.get(id);
     }

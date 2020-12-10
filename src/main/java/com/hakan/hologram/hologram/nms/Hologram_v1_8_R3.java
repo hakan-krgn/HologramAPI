@@ -37,7 +37,7 @@ public class Hologram_v1_8_R3 implements Hologram {
         if (this.entityArmorStands.size() > 0) {
             for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
                 PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
-                PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), false);
+                PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
                 for (Player player : players) {
                     sendPacket(player, spawnPacket);
                     sendPacket(player, metadataPacket);
