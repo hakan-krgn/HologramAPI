@@ -58,6 +58,8 @@ public class HologramAPI {
                 hologram.update();
             }
             file.delete();
+        } else {
+            Bukkit.getLogger().warning("HologramAPI already registered.");
         }
     }
 
