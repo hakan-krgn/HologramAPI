@@ -152,14 +152,14 @@ public class Hologram_v1_8_R3 implements Hologram {
     private void createArmorStands() {
         Variables.holograms.put(getId(), this);
         Location location = getLocation();
+        if (location == null) return;
         List<String> lines = getLines();
+        if (lines == null) return;
         int size = lines.size();
         if (size == 0) return;
         double startY = location.getY() + (((size * 0.24) + ((size - 1) * 0.05)) / 2);
         CraftWorld craftWorld = ((CraftWorld) location.getWorld());
-        if (craftWorld == null) {
-            return;
-        }
+        if (craftWorld == null) return;
         WorldServer worldServer = craftWorld.getHandle();
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         for (String line : lines) {
