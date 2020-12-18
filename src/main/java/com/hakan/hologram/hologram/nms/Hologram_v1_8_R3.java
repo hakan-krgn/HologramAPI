@@ -156,7 +156,11 @@ public class Hologram_v1_8_R3 implements Hologram {
         int size = lines.size();
         if (size == 0) return;
         double startY = location.getY() + (((size * 0.24) + ((size - 1) * 0.05)) / 2);
-        WorldServer worldServer = ((CraftWorld) location.getWorld()).getHandle();
+        CraftWorld craftWorld = ((CraftWorld) location.getWorld());
+        if (craftWorld == null) {
+            return;
+        }
+        WorldServer worldServer = craftWorld.getHandle();
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
         for (String line : lines) {
             EntityArmorStand entityArmorStand = new EntityArmorStand(worldServer);
