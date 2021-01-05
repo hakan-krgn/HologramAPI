@@ -13,9 +13,4 @@ public class Main extends JavaPlugin {
         instance = this;
         HologramAPI.setup(this);
     }
-
-    @Override
-    public void onDisable() {
-        HologramAPI.unsetup();
-    }
 }

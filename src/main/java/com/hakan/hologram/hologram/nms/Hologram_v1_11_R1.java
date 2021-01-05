@@ -5,6 +5,7 @@ import com.hakan.hologram.utils.Variables;
 import net.minecraft.server.v1_11_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_11_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -50,6 +51,21 @@ public class Hologram_v1_11_R1 implements Hologram {
     public void sendToAll() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             send(player);
+        }
+    }
+
+    @Override
+    public void addPlayer(OfflinePlayer player) {
+        this.players.add(player.getUniqueId());
+    }
+
+    @Override
+    public void removePlayer(OfflinePlayer offlinePlayer) {
+        this.players.remove(offlinePlayer.getUniqueId());
+        Player player = Bukkit.getPlayerExact(offlinePlayer.getName());
+        for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
+            PacketPlayOutEntityDestroy deletePacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
+            if (player != null) sendPacket(player, deletePacket);
         }
     }
 

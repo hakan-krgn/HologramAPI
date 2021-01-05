@@ -1,6 +1,7 @@
 package com.hakan.hologram.hologram;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -12,6 +13,10 @@ public interface Hologram {
     void send(Player... players);
 
     void sendToAll();
+
+    void addPlayer(OfflinePlayer offlinePlayer);
+
+    void removePlayer(OfflinePlayer offlinePlayer);
 
     void delete();
 
