@@ -17,7 +17,6 @@ public class TeleportListener implements Listener {
     @EventHandler
     public void onTeleport(PlayerTeleportEvent event) {
         new BukkitRunnable() {
-            @Override
             public void run() {
                 Player player = event.getPlayer();
                 UUID playerUniqueId = player.getUniqueId();
@@ -36,7 +35,6 @@ public class TeleportListener implements Listener {
     @EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event) {
         new BukkitRunnable() {
-            @Override
             public void run() {
                 Player player = event.getPlayer();
                 UUID playerUniqueId = player.getUniqueId();
