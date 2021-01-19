@@ -179,7 +179,7 @@ public class Hologram_v1_10_R1 implements Hologram {
             PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
             for (UUID uuid : players) {
                 Player player = Bukkit.getPlayer(uuid);
-                if (player != null) send(player);
+                if (player == null) continue;
                 sendPacket(player, metadataPacket);
             }
         }

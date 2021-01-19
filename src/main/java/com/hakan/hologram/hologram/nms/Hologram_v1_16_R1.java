@@ -167,11 +167,6 @@ public class Hologram_v1_16_R1 implements Hologram {
     }
 
     @Override
-    public boolean isVisible() {
-        return visible;
-    }
-
-    @Override
     public void setVisible(boolean visible) {
         this.visible = visible;
         for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
@@ -183,6 +178,11 @@ public class Hologram_v1_16_R1 implements Hologram {
                 sendPacket(player, metadataPacket);
             }
         }
+    }
+
+    @Override
+    public boolean isVisible() {
+        return visible;
     }
 
     private void createArmorStands() {
