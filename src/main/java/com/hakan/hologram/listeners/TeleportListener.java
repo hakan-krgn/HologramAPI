@@ -23,7 +23,7 @@ public class TeleportListener implements Listener {
                 for (Hologram hologram : HologramAPI.getHolograms()) {
                     for (UUID uuid : hologram.getPlayers()) {
                         if (playerUniqueId.equals(uuid)) {
-                            hologram.update();
+                            hologram.setVisible(hologram.getLocation().getWorld().equals(player.getWorld()));
                             break;
                         }
                     }
@@ -41,7 +41,7 @@ public class TeleportListener implements Listener {
                 for (Hologram hologram : HologramAPI.getHolograms()) {
                     for (UUID uuid : hologram.getPlayers()) {
                         if (playerUniqueId.equals(uuid)) {
-                            hologram.update();
+                            hologram.setVisible(hologram.getLocation().getWorld().equals(player.getWorld()));
                             break;
                         }
                     }

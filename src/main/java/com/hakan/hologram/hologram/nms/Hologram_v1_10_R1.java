@@ -21,6 +21,7 @@ public class Hologram_v1_10_R1 implements Hologram {
     private String id;
     private List<String> lines;
     private Location location;
+    private boolean visible;
     private Set<UUID> players = new HashSet<>();
 
     public Hologram_v1_10_R1(String id, List<String> lines, Location location) {
@@ -165,10 +166,28 @@ public class Hologram_v1_10_R1 implements Hologram {
         this.players = uuids;
     }
 
+    @Override
+    public boolean isVisible() {
+        return visible;
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+        for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
+            entityArmorStand.setInvisible(!visible);
+            PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
+            for (UUID uuid : players) {
+                Player player = Bukkit.getPlayer(uuid);
+                if (player != null) send(player);
+                sendPacket(player, metadataPacket);
+            }
+        }
+    }
+
     private void createArmorStands() {
         Variables.holograms.put(getId(), this);
         Location location = getLocation();
-        Bukkit.broadcastMessage(location + "");
         if (location == null) return;
         List<String> lines = getLines();
         if (lines == null) return;
