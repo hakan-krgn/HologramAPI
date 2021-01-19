@@ -168,6 +168,7 @@ public class Hologram_v1_10_R1 implements Hologram {
     private void createArmorStands() {
         Variables.holograms.put(getId(), this);
         Location location = getLocation();
+        Bukkit.broadcastMessage(location + "");
         if (location == null) return;
         List<String> lines = getLines();
         if (lines == null) return;
