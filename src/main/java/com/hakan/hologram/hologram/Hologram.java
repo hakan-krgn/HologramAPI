@@ -46,8 +46,8 @@ public interface Hologram {
 
     void setPlayers(Set<UUID> uuids);
 
-    void setVisible(boolean visible);
-
     boolean isVisible();
+
+    void setVisible(boolean visible);
 
 }

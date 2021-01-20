@@ -167,22 +167,32 @@ public class Hologram_v1_16_R2 implements Hologram {
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-        for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
-            entityArmorStand.setInvisible(!visible);
-            PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
-            for (UUID uuid : players) {
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) send(player);
-                sendPacket(player, metadataPacket);
-            }
-        }
+    public boolean isVisible() {
+        return visible;
     }
 
     @Override
-    public boolean isVisible() {
-        return visible;
+    public void setVisible(boolean visible) {
+        for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
+            if (visible && !this.visible) {
+                PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
+                PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
+                for (UUID uuid : players) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null) continue;
+                    sendPacket(player, spawnPacket);
+                    sendPacket(player, metadataPacket);
+                }
+            } else if (!visible && this.visible) {
+                PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
+                for (UUID uuid : players) {
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null) continue;
+                    sendPacket(player, destroyPacket);
+                }
+            }
+        }
+        this.visible = visible;
     }
 
     private void createArmorStands() {
