@@ -1,102 +1,45 @@
 package com.hakan.hologram.hologram.nms;
 
+import com.hakan.hologram.api.HologramAPI;
 import com.hakan.hologram.hologram.Hologram;
 import com.hakan.hologram.utils.Variables;
 import net.minecraft.server.v1_16_R1.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class Hologram_v1_16_R1 implements Hologram {
 
     private final Set<EntityArmorStand> entityArmorStands = new HashSet<>();
+
+    private Player player;
     private String id;
     private List<String> lines;
     private Location location;
-    private boolean visible;
-    private Set<UUID> players = new HashSet<>();
+    private boolean visible = false;
 
-    public Hologram_v1_16_R1(String id, List<String> lines, Location location) {
+    public Hologram_v1_16_R1(Player player, String id, List<String> lines, Location location) {
+        this.player = player;
         this.id = id;
         this.lines = lines;
         this.location = location;
-        createArmorStands();
+        this.entityArmorStands.addAll(createArmorstand(lines));
     }
 
     @Override
-    public void send(Player... players) {
-        for (Player player : players) {
-            this.players.add(player.getUniqueId());
-        }
-        if (this.entityArmorStands.size() > 0) {
-            for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
-                PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
-                PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
-                for (Player player : players) {
-                    sendPacket(player, spawnPacket);
-                    sendPacket(player, metadataPacket);
-                }
-            }
-        }
+    public Player getPlayer() {
+        return player;
     }
 
     @Override
-    public void sendToAll() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            send(player);
-        }
-    }
-
-    @Override
-    public void addPlayer(OfflinePlayer player) {
-        this.players.add(player.getUniqueId());
-    }
-
-    @Override
-    public void removePlayer(OfflinePlayer offlinePlayer) {
-        this.players.remove(offlinePlayer.getUniqueId());
-        Player player = Bukkit.getPlayerExact(offlinePlayer.getName());
-        for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
-            PacketPlayOutEntityDestroy deletePacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
-            if (player != null) sendPacket(player, deletePacket);
-        }
-    }
-
-    @Override
-    public void delete() {
-        if (this.entityArmorStands.size() > 0) {
-            for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
-                PacketPlayOutEntityDestroy deletePacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
-                for (UUID uuid : getPlayers()) {
-                    Player player = Bukkit.getPlayer(uuid);
-                    if (player != null) sendPacket(player, deletePacket);
-                }
-            }
-        }
-        this.entityArmorStands.clear();
-        Variables.holograms.remove(getId());
-    }
-
-    @Override
-    public void update() {
-        delete();
-        createArmorStands();
-        for (UUID uuid : getPlayers()) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player != null) send(player);
-        }
-    }
-
-    private void sendPacket(Player player, Packet packet) {
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     @Override
@@ -110,7 +53,6 @@ public class Hologram_v1_16_R1 implements Hologram {
     }
 
     @Override
-
     public List<String> getLines() {
         return this.lines;
     }
@@ -118,31 +60,33 @@ public class Hologram_v1_16_R1 implements Hologram {
     @Override
     public void setLines(List<String> lines) {
         this.lines = lines;
-        update();
     }
 
     @Override
     public void setLine(int index, String line) {
         this.lines.set(index, line);
-        update();
     }
 
     @Override
     public void addLine(String line) {
         this.lines.add(line);
-        update();
     }
 
     @Override
     public void removeLine(int index) {
         this.lines.remove(index);
-        update();
     }
 
     @Override
     public void removeLine(String line) {
-        this.lines.remove(line);
-        update();
+        int index = 0;
+        for (String holoLine : this.lines) {
+            if (holoLine.equals(line)) {
+                break;
+            }
+            index++;
+        }
+        removeLine(index);
     }
 
     @Override
@@ -153,60 +97,67 @@ public class Hologram_v1_16_R1 implements Hologram {
     @Override
     public void setLocation(Location location) {
         this.location = location;
-        update();
-    }
-
-    @Override
-    public Set<UUID> getPlayers() {
-        return this.players;
-    }
-
-    @Override
-    public void setPlayers(Set<UUID> uuids) {
-        this.players = uuids;
     }
 
     @Override
     public boolean isVisible() {
-        return visible;
+        return this.visible;
     }
 
     @Override
     public void setVisible(boolean visible) {
-        for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
-            if (visible && !this.visible) {
-                PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
-                PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
-                for (UUID uuid : players) {
-                    Player player = Bukkit.getPlayer(uuid);
-                    if (player == null) continue;
-                    sendPacket(player, spawnPacket);
-                    sendPacket(player, metadataPacket);
-                }
-            } else if (!visible && this.visible) {
-                PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
-                for (UUID uuid : players) {
-                    Player player = Bukkit.getPlayer(uuid);
-                    if (player == null) continue;
-                    sendPacket(player, destroyPacket);
-                }
-            }
-        }
         this.visible = visible;
     }
 
-    private void createArmorStands() {
-        Variables.holograms.put(getId(), this);
+    @Override
+    public void delete() {
+        Variables.holograms.remove(this.player);
+    }
+
+    @Override
+    public void update() {
+        if (player == null || !player.isOnline()) {
+            return;
+        }
+        if (HologramAPI.isAlive(player)) {
+            this.entityArmorStands.clear();
+            this.entityArmorStands.addAll(createArmorstand(this.lines));
+
+            for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
+                PacketPlayOutEntityTeleport teleportPacket = new PacketPlayOutEntityTeleport(entityArmorStand);
+                if (!visible) {
+                    PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
+                    sendPacket(player, teleportPacket, destroyPacket);
+                } else {
+                    PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
+                    sendPacket(player, teleportPacket, spawnPacket);
+                }
+            }
+        } else {
+            for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
+                PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
+                sendPacket(player, destroyPacket);
+            }
+        }
+    }
+
+    private List<EntityArmorStand> createArmorstand(List<String> lines) {
+
         Location location = getLocation();
-        if (location == null) return;
-        List<String> lines = getLines();
-        if (lines == null) return;
+        if (location == null) return new ArrayList<>();
+
+        if (lines == null) return new ArrayList<>();
         int size = lines.size();
-        if (size == 0) return;
+        if (size == 0) return new ArrayList<>();
+
         double startY = location.getY() + (((size * 0.24) + ((size - 1) * 0.05)) / 2);
+
         CraftWorld craftWorld = ((CraftWorld) location.getWorld());
-        if (craftWorld == null) return;
+        if (craftWorld == null) return new ArrayList<>();
         WorldServer worldServer = craftWorld.getHandle();
+
+        List<EntityArmorStand> entityArmorStands = new ArrayList<>();
+
         for (String line : lines) {
             EntityArmorStand entityArmorStand = new EntityArmorStand(worldServer, location.getX(), startY, location.getZ());
             entityArmorStand.setMarker(true);
@@ -216,8 +167,18 @@ public class Hologram_v1_16_R1 implements Hologram {
             entityArmorStand.setInvisible(true);
             entityArmorStand.setCustomNameVisible(true);
             entityArmorStand.setCustomName(IChatBaseComponent.ChatSerializer.a("{\"text\":\"" + line + "\"}"));
-            this.entityArmorStands.add(entityArmorStand);
+            entityArmorStands.add(entityArmorStand);
             startY = startY - 0.245;
+        }
+
+        return entityArmorStands;
+    }
+
+    private void sendPacket(Player player, Packet... packets) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+        for (Packet packet : packets) {
+            if (packet == null) continue;
+            playerConnection.sendPacket(packet);
         }
     }
 }

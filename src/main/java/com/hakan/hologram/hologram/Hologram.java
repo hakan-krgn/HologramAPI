@@ -1,26 +1,15 @@
 package com.hakan.hologram.hologram;
 
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 public interface Hologram {
 
-    void send(Player... players);
+    Player getPlayer();
 
-    void sendToAll();
-
-    void addPlayer(OfflinePlayer offlinePlayer);
-
-    void removePlayer(OfflinePlayer offlinePlayer);
-
-    void delete();
-
-    void update();
+    void setPlayer(Player player);
 
     String getId();
 
@@ -42,12 +31,11 @@ public interface Hologram {
 
     void setLocation(Location location);
 
-    Set<UUID> getPlayers();
-
-    void setPlayers(Set<UUID> uuids);
-
     boolean isVisible();
 
     void setVisible(boolean visible);
 
+    void delete();
+
+    void update();
 }
