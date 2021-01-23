@@ -25,7 +25,7 @@ public class Hologram_v1_11_R1 implements Hologram {
     private boolean visible = false;
 
     public Hologram_v1_11_R1(Player player, String id, List<String> lines, Location location) {
-        this.player = player;
+        setPlayer(player);
         this.id = id;
         this.lines = lines;
         this.location = location;
@@ -40,6 +40,9 @@ public class Hologram_v1_11_R1 implements Hologram {
     @Override
     public void setPlayer(Player player) {
         this.player = player;
+        List<Hologram> holograms = Variables.holograms.getOrDefault(player, new ArrayList<>());
+        holograms.add(this);
+        Variables.holograms.put(player, holograms);
     }
 
     @Override
@@ -111,7 +114,9 @@ public class Hologram_v1_11_R1 implements Hologram {
 
     @Override
     public void delete() {
-        Variables.holograms.remove(this.player);
+        List<Hologram> holograms = Variables.holograms.getOrDefault(this.player, new ArrayList<>());
+        holograms.remove(this);
+        Variables.holograms.put(this.player, holograms);
     }
 
     @Override
@@ -119,7 +124,7 @@ public class Hologram_v1_11_R1 implements Hologram {
         if (player == null || !player.isOnline()) {
             return;
         }
-        if (HologramAPI.isAlive(player)) {
+        if (HologramAPI.isAlive(player, id)) {
             this.entityArmorStands.clear();
             this.entityArmorStands.addAll(createArmorstand(this.lines));
 

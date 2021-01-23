@@ -18,16 +18,28 @@ import java.util.List;
 
 public class HologramAPI {
 
-    public static List<Hologram> getHolograms() {
-        return new ArrayList<>(Variables.holograms.values());
+    public static List<Hologram> getHolograms(Player player) {
+        return Variables.holograms.getOrDefault(player, new ArrayList<>());
     }
 
-    public static Hologram getHologram(Player player) {
-        return Variables.holograms.get(player);
+    public static Hologram getHologram(Player player, String id) {
+        List<Hologram> holograms = getHolograms(player);
+        for (Hologram hologram : holograms) {
+            if (hologram.getId().equals(id)) {
+                return hologram;
+            }
+        }
+        return null;
     }
 
-    public static boolean isAlive(Player player) {
-        return getHologram(player) != null;
+    public static boolean isAlive(Player player, String id) {
+        List<Hologram> holograms = getHolograms(player);
+        for (Hologram hologram : holograms) {
+            if (hologram.getId().equals(id)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void setup(Plugin plugin) {

@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
+
 public class JoinListener implements Listener {
 
     @EventHandler
@@ -17,9 +19,11 @@ public class JoinListener implements Listener {
             @Override
             public void run() {
                 Player player = event.getPlayer();
-                Hologram hologram = HologramAPI.getHologram(player);
-                if (hologram != null) {
-                    hologram.update();
+                List<Hologram> holograms = HologramAPI.getHolograms(player);
+                if (holograms != null && holograms.size() != 0) {
+                    for (Hologram hologram : holograms) {
+                        hologram.update();
+                    }
                 }
             }
         }.runTaskLater(Main.instance, 15);

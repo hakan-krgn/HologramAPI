@@ -10,6 +10,8 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.List;
+
 public class TeleportListener implements Listener {
 
     @EventHandler
@@ -17,9 +19,11 @@ public class TeleportListener implements Listener {
         new BukkitRunnable() {
             public void run() {
                 Player player = event.getPlayer();
-                Hologram hologram = HologramAPI.getHologram(player);
-                if (hologram != null) {
-                    hologram.setVisible(hologram.getLocation().getWorld().equals(player.getWorld()));
+                List<Hologram> holograms = HologramAPI.getHolograms(player);
+                if (holograms != null && holograms.size() != 0) {
+                    for (Hologram hologram : holograms) {
+                        hologram.setVisible(hologram.getLocation().getWorld().equals(player.getWorld()));
+                    }
                 }
             }
         }.runTaskLater(Main.instance, 15);
@@ -30,9 +34,11 @@ public class TeleportListener implements Listener {
         new BukkitRunnable() {
             public void run() {
                 Player player = event.getPlayer();
-                Hologram hologram = HologramAPI.getHologram(player);
-                if (hologram != null) {
-                    hologram.setVisible(hologram.getLocation().getWorld().equals(player.getWorld()));
+                List<Hologram> holograms = HologramAPI.getHolograms(player);
+                if (holograms != null && holograms.size() != 0) {
+                    for (Hologram hologram : holograms) {
+                        hologram.setVisible(hologram.getLocation().getWorld().equals(player.getWorld()));
+                    }
                 }
             }
         }.runTaskLater(Main.instance, 15);
