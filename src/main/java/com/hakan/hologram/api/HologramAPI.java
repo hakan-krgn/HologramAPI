@@ -18,28 +18,20 @@ import java.util.List;
 
 public class HologramAPI {
 
+    public static List<Hologram> getHolograms(String playerName) {
+        return Variables.playerHolograms.getOrDefault(playerName, new ArrayList<>());
+    }
+
     public static List<Hologram> getHolograms(Player player) {
-        return Variables.holograms.getOrDefault(player, new ArrayList<>());
+        return getHolograms(player.getName());
     }
 
-    public static Hologram getHologram(Player player, String id) {
-        List<Hologram> holograms = getHolograms(player);
-        for (Hologram hologram : holograms) {
-            if (hologram.getId().equals(id)) {
-                return hologram;
-            }
-        }
-        return null;
+    public static Hologram getHologram(String id) {
+        return Variables.holograms.get(id);
     }
 
-    public static boolean isAlive(Player player, String id) {
-        List<Hologram> holograms = getHolograms(player);
-        for (Hologram hologram : holograms) {
-            if (hologram.getId().equals(id)) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isAlive(String id) {
+        return getHologram(id) != null;
     }
 
     public static void setup(Plugin plugin) {
@@ -62,12 +54,6 @@ public class HologramAPI {
         private String id;
         private List<String> lines;
         private Location location;
-        private Player player;
-
-        public HologramManager setPlayer(Player player) {
-            this.player = player;
-            return this;
-        }
 
         public HologramManager setLocation(Location location) {
             this.location = location;
@@ -102,31 +88,31 @@ public class HologramAPI {
             }
             switch (serverVersion) {
                 case "v1_8_R3":
-                    return new Hologram_v1_8_R3(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_8_R3(this.id, lines, this.location);
                 case "v1_9_R1":
-                    return new Hologram_v1_9_R1(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_9_R1(this.id, lines, this.location);
                 case "v1_9_R2":
-                    return new Hologram_v1_9_R2(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_9_R2(this.id, lines, this.location);
                 case "v1_10_R1":
-                    return new Hologram_v1_10_R1(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_10_R1(this.id, lines, this.location);
                 case "v1_11_R1":
-                    return new Hologram_v1_11_R1(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_11_R1(this.id, lines, this.location);
                 case "v1_12_R1":
-                    return new Hologram_v1_12_R1(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_12_R1(this.id, lines, this.location);
                 case "v1_13_R1":
-                    return new Hologram_v1_13_R1(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_13_R1(this.id, lines, this.location);
                 case "v1_13_R2":
-                    return new Hologram_v1_13_R2(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_13_R2(this.id, lines, this.location);
                 case "v1_14_R1":
-                    return new Hologram_v1_14_R1(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_14_R1(this.id, lines, this.location);
                 case "v1_15_R1":
-                    return new Hologram_v1_15_R1(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_15_R1(this.id, lines, this.location);
                 case "v1_16_R1":
-                    return new Hologram_v1_16_R1(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_16_R1(this.id, lines, this.location);
                 case "v1_16_R2":
-                    return new Hologram_v1_16_R2(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_16_R2(this.id, lines, this.location);
                 case "v1_16_R3":
-                    return new Hologram_v1_16_R3(this.player, this.id, lines, this.location);
+                    return new Hologram_v1_16_R3(this.id, lines, this.location);
             }
             return null;
         }

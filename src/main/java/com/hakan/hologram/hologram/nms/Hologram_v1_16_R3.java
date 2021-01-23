@@ -4,45 +4,60 @@ import com.hakan.hologram.api.HologramAPI;
 import com.hakan.hologram.hologram.Hologram;
 import com.hakan.hologram.utils.Variables;
 import net.minecraft.server.v1_16_R3.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Hologram_v1_16_R3 implements Hologram {
 
     private final Set<EntityArmorStand> entityArmorStands = new HashSet<>();
+    private final List<String> playerList = new ArrayList<>();
+    private final HashMap<String, Boolean> visible = new HashMap<>();
 
-    private Player player;
     private String id;
     private List<String> lines;
     private Location location;
-    private boolean visible = false;
 
-    public Hologram_v1_16_R3(Player player, String id, List<String> lines, Location location) {
-        setPlayer(player);
+    public Hologram_v1_16_R3(String id, List<String> lines, Location location) {
         this.id = id;
         this.lines = lines;
         this.location = location;
         this.entityArmorStands.addAll(createArmorstand(lines));
+        Variables.holograms.put(id, this);
     }
 
     @Override
-    public Player getPlayer() {
-        return player;
+    public List<String> getPlayers() {
+        return playerList;
     }
 
     @Override
-    public void setPlayer(Player player) {
-        this.player = player;
-        List<Hologram> holograms = Variables.holograms.getOrDefault(player, new ArrayList<>());
+    public void addPlayer(String playerName) {
+        if (playerList.contains(playerName)) return;
+        this.playerList.add(playerName);
+        List<Hologram> holograms = Variables.playerHolograms.getOrDefault(playerName, new ArrayList<>());
         holograms.add(this);
-        Variables.holograms.put(player, holograms);
+        Variables.playerHolograms.put(playerName, holograms);
+    }
+
+    @Override
+    public void removePlayer(String playerName) {
+        if (!playerList.contains(playerName)) return;
+        this.playerList.remove(playerName);
+        List<Hologram> holograms = Variables.playerHolograms.getOrDefault(playerName, new ArrayList<>());
+        holograms.remove(this);
+        Variables.playerHolograms.put(playerName, holograms);
+
+        Player player = Bukkit.getPlayerExact(playerName);
+        if (player == null) return;
+        for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
+            PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
+            sendPacket(player, destroyPacket);
+        }
     }
 
     @Override
@@ -103,45 +118,54 @@ public class Hologram_v1_16_R3 implements Hologram {
     }
 
     @Override
-    public boolean isVisible() {
-        return this.visible;
+    public boolean isVisible(String playerName) {
+        return this.visible.get(playerName);
     }
 
     @Override
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+    public void setVisible(String playerName, boolean visible) {
+        this.visible.put(playerName, visible);
     }
 
     @Override
     public void delete() {
-        List<Hologram> holograms = Variables.holograms.getOrDefault(this.player, new ArrayList<>());
-        holograms.remove(this);
-        Variables.holograms.put(this.player, holograms);
+        for (String playerName : playerList) {
+            List<Hologram> holograms = Variables.playerHolograms.getOrDefault(playerName, new ArrayList<>());
+            holograms.remove(this);
+            Variables.playerHolograms.put(playerName, holograms);
+        }
+        Variables.holograms.remove(id);
+        playerList.clear();
     }
 
     @Override
     public void update() {
-        if (player == null || !player.isOnline()) {
-            return;
-        }
-        if (HologramAPI.isAlive(player, id)) {
+        if (HologramAPI.isAlive(id)) {
+
             this.entityArmorStands.clear();
             this.entityArmorStands.addAll(createArmorstand(this.lines));
 
-            for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
-                PacketPlayOutEntityTeleport teleportPacket = new PacketPlayOutEntityTeleport(entityArmorStand);
-                if (!visible) {
-                    PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
-                    sendPacket(player, teleportPacket, destroyPacket);
-                } else {
-                    PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
-                    sendPacket(player, teleportPacket, spawnPacket);
+            for (String playerName : playerList) {
+
+                Player player = Bukkit.getPlayerExact(playerName);
+                if (player == null) continue;
+
+                for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
+                    PacketPlayOutEntityTeleport teleportPacket = new PacketPlayOutEntityTeleport(entityArmorStand);
+                    if (visible.get(playerName)) {
+                        PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
+                        sendPacket(player, teleportPacket, spawnPacket);
+                    } else {
+                        PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
+                        sendPacket(player, teleportPacket, destroyPacket);
+                    }
                 }
+
             }
         } else {
             for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
                 PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
-                sendPacket(player, destroyPacket);
+                sendPacket(playerList, destroyPacket);
             }
         }
     }
@@ -184,6 +208,14 @@ public class Hologram_v1_16_R3 implements Hologram {
         for (Packet packet : packets) {
             if (packet == null) continue;
             playerConnection.sendPacket(packet);
+        }
+    }
+
+    private void sendPacket(List<String> players, Packet... packets) {
+        for (String playerName : players) {
+            Player player = Bukkit.getPlayerExact(playerName);
+            if (player == null) continue;
+            sendPacket(player, packets);
         }
     }
 }

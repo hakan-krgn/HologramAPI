@@ -22,7 +22,8 @@ public class TeleportListener implements Listener {
                 List<Hologram> holograms = HologramAPI.getHolograms(player);
                 if (holograms != null && holograms.size() != 0) {
                     for (Hologram hologram : holograms) {
-                        hologram.setVisible(hologram.getLocation().getWorld().equals(player.getWorld()));
+                        hologram.setVisible(player.getName(), hologram.getLocation().getWorld().equals(player.getWorld()));
+                        hologram.update();
                     }
                 }
             }
@@ -37,7 +38,8 @@ public class TeleportListener implements Listener {
                 List<Hologram> holograms = HologramAPI.getHolograms(player);
                 if (holograms != null && holograms.size() != 0) {
                     for (Hologram hologram : holograms) {
-                        hologram.setVisible(hologram.getLocation().getWorld().equals(player.getWorld()));
+                        hologram.setVisible(player.getName(), hologram.getLocation().getWorld().equals(player.getWorld()));
+                        hologram.update();
                     }
                 }
             }
