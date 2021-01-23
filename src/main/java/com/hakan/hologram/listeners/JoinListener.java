@@ -22,7 +22,8 @@ public class JoinListener implements Listener {
                 List<Hologram> holograms = HologramAPI.getHolograms(player);
                 if (holograms != null && holograms.size() != 0) {
                     for (Hologram hologram : holograms) {
-                        hologram.update();
+                        hologram.removePlayer(player.getName());
+                        hologram.addPlayer(player.getName());
                     }
                 }
             }

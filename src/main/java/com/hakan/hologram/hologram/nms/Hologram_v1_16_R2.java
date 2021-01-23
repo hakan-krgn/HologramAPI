@@ -135,12 +135,12 @@ public class Hologram_v1_16_R2 implements Hologram {
             Variables.playerHolograms.put(playerName, holograms);
         }
         Variables.holograms.remove(id);
-        update();
+        sendAgain(null);
         playerList.clear();
     }
 
     @Override
-    public void update() {
+    public void sendAgain(Player player) {
         if (HologramAPI.isAlive(id)) {
 
             this.entityArmorStands.clear();
@@ -148,7 +148,7 @@ public class Hologram_v1_16_R2 implements Hologram {
 
             for (String playerName : playerList) {
 
-                Player player = Bukkit.getPlayerExact(playerName);
+                Player playesr = Bukkit.getPlayerExact(playerName);
                 if (player == null) continue;
 
                 for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
