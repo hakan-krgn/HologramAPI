@@ -1,7 +1,6 @@
 package com.hakan.hologram.hologram;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -38,6 +37,4 @@ public interface Hologram {
     void setVisible(String playerName, boolean visible);
 
     void delete();
-
-    void sendAgain(Player player);
 }

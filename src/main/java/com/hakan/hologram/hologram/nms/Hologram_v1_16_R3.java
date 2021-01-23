@@ -47,7 +47,7 @@ public class Hologram_v1_16_R3 implements Hologram {
         if (player == null) return;
         for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
             PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
-            PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), false);
+            PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
             sendPacket(player, spawnPacket, metadataPacket);
         }
     }
@@ -97,7 +97,7 @@ public class Hologram_v1_16_R3 implements Hologram {
 
         for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
             PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
-            PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), false);
+            PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
             sendPacket(playerList, spawnPacket, metadataPacket);
         }
     }
@@ -165,7 +165,7 @@ public class Hologram_v1_16_R3 implements Hologram {
             } else if (visible) {
                 for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
                     PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
-                    PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), false);
+                    PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
                     sendPacket(player, spawnPacket, metadataPacket);
                 }
             } else {
@@ -190,17 +190,6 @@ public class Hologram_v1_16_R3 implements Hologram {
         for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
             PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
             sendPacket(playerList, destroyPacket);
-        }
-    }
-
-    @Override
-    public void sendAgain(Player player) {
-        if (visible.get(player.getName())) {
-            for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
-                PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
-                PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), false);
-                sendPacket(player, spawnPacket, metadataPacket);
-            }
         }
     }
 
