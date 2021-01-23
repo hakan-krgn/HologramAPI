@@ -135,6 +135,7 @@ public class Hologram_v1_13_R2 implements Hologram {
             Variables.playerHolograms.put(playerName, holograms);
         }
         Variables.holograms.remove(id);
+        update();
         playerList.clear();
     }
 
