@@ -19,7 +19,7 @@ import java.util.List;
 public class HologramAPI {
 
     public static List<Hologram> getHolograms(String playerName) {
-        return Variables.playerHolograms.getOrDefault(playerName, new ArrayList<>());
+        return new ArrayList<>(Variables.playerHolograms.getOrDefault(playerName, new ArrayList<>()));
     }
 
     public static List<Hologram> getHolograms(Player player) {
