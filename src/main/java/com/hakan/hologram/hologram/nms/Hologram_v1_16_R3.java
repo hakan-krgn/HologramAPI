@@ -196,7 +196,13 @@ public class Hologram_v1_16_R3 implements Hologram {
 
         for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
             PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entityArmorStand.getId());
-            sendPacket(players, destroyPacket);
+            if (this.allListener != null) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    sendPacket(player, destroyPacket);
+                }
+            } else {
+                sendPacket(players, destroyPacket);
+            }
         }
 
         this.entityArmorStands = createArmorstand(lines);
@@ -204,32 +210,31 @@ public class Hologram_v1_16_R3 implements Hologram {
         for (EntityArmorStand entityArmorStand : this.entityArmorStands) {
             PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(entityArmorStand);
             PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
-            sendPacket(players, spawnPacket, metadataPacket);
+            if (this.allListener != null) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    sendPacket(player, spawnPacket, metadataPacket);
+                }
+            } else {
+                sendPacket(players, spawnPacket, metadataPacket);
+            }
         }
     }
 
     @Override
     public void setLine(int index, String line) {
         this.lines.set(index, line);
-
-        EntityArmorStand entityArmorStand = new ArrayList<>(this.entityArmorStands).get(index);
-        PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
-        sendPacket(players, metadataPacket);
+        setLines(this.lines);
     }
 
     @Override
     public void addLine(String line) {
         this.lines.add(line);
-
-        EntityArmorStand entityArmorStand = new ArrayList<>(this.entityArmorStands).get(this.lines.size() - 1);
-        PacketPlayOutEntityMetadata metadataPacket = new PacketPlayOutEntityMetadata(entityArmorStand.getId(), entityArmorStand.getDataWatcher(), true);
-        sendPacket(players, metadataPacket);
+        setLines(this.lines);
     }
 
     @Override
     public void removeLine(int index) {
         this.lines.remove(index);
-
         setLines(this.lines);
     }
 

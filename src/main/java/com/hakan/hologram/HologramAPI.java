@@ -96,7 +96,7 @@ public class HologramAPI {
                 case "v1_16_R1":
                     return new Hologram_v1_16_R1(this.id, lines, this.location);
                 case "v1_16_R2":
-                    return new Hologram_v1_16_R2(this.id, lines, this.location);
+                    return new Hologram_v1_13_R1(this.id, lines, this.location);
                 case "v1_16_R3":
                     return new Hologram_v1_16_R3(this.id, lines, this.location);
             }
