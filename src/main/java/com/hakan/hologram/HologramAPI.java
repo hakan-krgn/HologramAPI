@@ -1,45 +1,31 @@
-package com.hakan.hologram.api;
+package com.hakan.hologram;
 
-import com.hakan.hologram.Main;
 import com.hakan.hologram.hologram.Hologram;
 import com.hakan.hologram.hologram.nms.*;
-import com.hakan.hologram.listeners.JoinListener;
-import com.hakan.hologram.listeners.TeleportListener;
 import com.hakan.hologram.utils.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HologramAPI {
 
-    public static List<Hologram> getHolograms(String playerName) {
-        return new ArrayList<>(Variables.playerHolograms.getOrDefault(playerName, new ArrayList<>()));
-    }
-
-    public static List<Hologram> getHolograms(Player player) {
-        return getHolograms(player.getName());
-    }
+    public static Plugin instance;
 
     public static Hologram getHologram(String id) {
-        return Variables.holograms.get(id);
+        return Variables.hologramList.get(id);
     }
 
     public static boolean isAlive(String id) {
-        return getHologram(id) != null;
+        return Variables.hologramList.containsKey(id);
     }
 
     public static void setup(Plugin plugin) {
-        if (Main.instance == null) {
-            Main.instance = plugin;
-            PluginManager pm = Bukkit.getPluginManager();
-            pm.registerEvents(new JoinListener(), plugin);
-            pm.registerEvents(new TeleportListener(), plugin);
+        if (instance == null) {
+            instance = plugin;
         } else {
             Bukkit.getLogger().warning("HologramAPI already registered.");
         }
@@ -52,7 +38,7 @@ public class HologramAPI {
     public static class HologramManager {
 
         private String id;
-        private List<String> lines;
+        private List<String> lines = new ArrayList<>();
         private Location location;
 
         public HologramManager setLocation(Location location) {

@@ -6,11 +6,13 @@ import java.util.List;
 
 public interface Hologram {
 
-    List<String> getPlayers();
+    void send(String playerName);
 
-    void addPlayer(String playerName);
+    void sendAll();
 
-    void removePlayer(String playerName);
+    void remove(String playerName);
+
+    void removeAll();
 
     String getId();
 
@@ -31,10 +33,6 @@ public interface Hologram {
     Location getLocation();
 
     void setLocation(Location location);
-
-    boolean isVisible(String playerName);
-
-    void setVisible(String playerName, boolean visible);
 
     void delete();
 }
