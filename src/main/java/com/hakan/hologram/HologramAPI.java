@@ -6,6 +6,9 @@ import com.hakan.hologram.utils.Variables;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -29,6 +32,17 @@ public class HologramAPI {
         } else {
             Bukkit.getLogger().warning("HologramAPI already registered.");
         }
+
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onDisable(PluginDisableEvent event) {
+                if (event.getPlugin().equals(plugin)) {
+                    for (Hologram hologram : Variables.hologramList.values()) {
+                        hologram.delete();
+                    }
+                }
+            }
+        }, plugin);
     }
 
     public static HologramManager getHologramManager() {
