@@ -222,6 +222,7 @@ public class Hologram_v1_16_R3 implements Hologram {
 
     @Override
     public void setLine(int index, String line) {
+        if (this.lines.size() <= index) return;
         this.lines.set(index, line);
         setLines(this.lines);
     }

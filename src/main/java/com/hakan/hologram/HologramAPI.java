@@ -37,7 +37,7 @@ public class HologramAPI {
             @EventHandler
             public void onDisable(PluginDisableEvent event) {
                 if (event.getPlugin().equals(plugin)) {
-                    for (Hologram hologram : Variables.hologramList.values()) {
+                    for (Hologram hologram : new ArrayList<>(Variables.hologramList.values())) {
                         hologram.delete();
                     }
                 }
