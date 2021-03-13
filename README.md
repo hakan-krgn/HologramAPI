@@ -2,7 +2,6 @@
 
 ```java
 public void spawn(Player player){
-    
     HologramAPI.HologramManager hologramManager = HologramAPI.getHologramManager();
     
     hologramManager.setId("sa");
